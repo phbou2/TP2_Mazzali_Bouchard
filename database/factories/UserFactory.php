@@ -5,13 +5,11 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+define('USER_ROLE_ID', 1);
+
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    
     public function definition()
     {
         return [
@@ -20,6 +18,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
+            'role_id' => USER_ROLE_ID
         ];
     }
 

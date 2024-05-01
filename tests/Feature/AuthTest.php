@@ -21,7 +21,8 @@ class AuthTest extends TestCase
             "password" => "example_password2",
             "email" => "examplsadasde21@example.com",
             "last_name" => "ExampleLast",
-            "first_name" => "ExampleFirst"   
+            "first_name" => "ExampleFirst",
+            "role_id" => 1 //For some reason if i put the constant here it cant find it but for the rest of the code it works
         ];
 
         $this->postJson('api/signup', $user);
@@ -52,6 +53,7 @@ class AuthTest extends TestCase
                 'email' => 'test_user' . $i . '@example.com', 
                 'last_name' => 'Test',
                 'first_name' => 'User' . $i,
+                'role_id' => 1 //For some reason if i put the constant here it cant find it but for the rest of the code it works
             ]);
 
             $response->assertStatus(CREATED); 
@@ -64,6 +66,7 @@ class AuthTest extends TestCase
             'email' => 'test_user6@example.com',
             'last_name' => 'Test',
             'first_name' => 'User6',
+            'role_id' => 1 //For some reason if i put the constant here it cant find it but for the rest of the code it works
         ]);
 
         $response->assertStatus(TOO_MANY_REQUESTS);
@@ -92,6 +95,7 @@ class AuthTest extends TestCase
             'email' => 'test_usadwadasdawer@example.com',
             'last_name' => 'Test',
             'first_name' => 'User',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $this->postJson('api/signup', $userData);
@@ -113,6 +117,7 @@ class AuthTest extends TestCase
             'email' => 'test_user@example.com',
             'last_name' => 'Test',
             'first_name' => 'User',
+            'role_id' => USER_ROLE_ID 
         ];
         
 
@@ -158,6 +163,7 @@ class AuthTest extends TestCase
             'email' => 'example@example.com',
             'last_name' => 'ExampleLast',
             'first_name' => 'ExampleFirst',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $this->postJson('api/signup', $user);
@@ -177,6 +183,7 @@ class AuthTest extends TestCase
             'email' => 'example@example.com',
             'last_name' => 'ExampleLast',
             'first_name' => 'ExampleFirst',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $response = $this->postJson('api/signup', $user);
@@ -192,6 +199,7 @@ class AuthTest extends TestCase
             'email' => 'invalid_email_format',
             'last_name' => 'ExampleLast',
             'first_name' => 'ExampleFirst',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $response = $this->postJson('api/signup', $user);
@@ -207,6 +215,7 @@ class AuthTest extends TestCase
             'email' => 'existing_email@example.com',
             'last_name' => 'ExampleLast',
             'first_name' => 'ExampleFirst',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $response = $this->postJson('api/signup', $user1);
@@ -220,6 +229,7 @@ class AuthTest extends TestCase
             'email' => 'existing_email@example.com',
             'last_name' => 'ExampleLast',
             'first_name' => 'ExampleFirst',
+            'role_id' => USER_ROLE_ID 
         ];
 
         $response = $this->postJson('api/signup', $user2);

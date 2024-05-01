@@ -131,6 +131,7 @@ class AuthController extends Controller
                 'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],
                 'last_name' => ['required', 'string', 'max:50'],
                 'first_name' => ['required', 'string', 'max:50'],
+                'role_id' => ['required', 'int', 'max:1'],
             ]);
         
             if ($validator->fails()) {
@@ -143,6 +144,7 @@ class AuthController extends Controller
             $newUser->email = $user['email'];
             $newUser->last_name = $user['last_name'];
             $newUser->first_name = $user['first_name'];
+            $newUser->role_id = $user['role_id'];
             $newUser->save();
 
             return response()->json(['message' => 'User registered succesfully'], CREATED);

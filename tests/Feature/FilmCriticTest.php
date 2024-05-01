@@ -11,4 +11,10 @@ class FilmCriticTest extends TestCase
 {
     use DatabaseMigrations;
    
+    public function testBasicTest()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
 }

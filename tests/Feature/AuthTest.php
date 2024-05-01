@@ -26,7 +26,7 @@ class AuthTest extends TestCase
 
         $this->postJson('api/signup', $user);
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $response = $this->postJson('api/signin', [ 
                 'login' => $user['login'],
                 'password' => $user['password'], 

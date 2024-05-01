@@ -48,4 +48,8 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Critic');
     }
+    public function roles()
+    {
+        return $this->belongsTo('App\Models\Role');
+    }
 }

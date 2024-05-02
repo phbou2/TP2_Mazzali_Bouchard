@@ -15,5 +15,31 @@ class FilmController extends Controller
     {
         $this->filmRepository = $filmRepository;
     }
+
+    public function index()
+    {
+        return $this->$filmRepository->getAll();        
+    }
+
+    public function create($request)
+    {
+        try{
+            if ($this->$filmRepository->checkIfAdmin())
+            {
+                if ($this->$filmRepository->validateData())
+                {
+                    $this->$filmRepository->create($request->all());
+                    return response()->json(['message' => 'Film created successfully'], CREATED);
+                }else {
+                    return response()->json(['error' => 'Invalid data'], INVALID_DATA);
+                }
+            }else {
+                return response()->json(['error' => 'Only admins can create films'], FORBIDDEN);
+            }
+        }catch (\Exception $e)
+        {
+            return response()->json(['error' => 'Failed to create film: ' . $e->getMessage()], SERVER_ERROR);
+        }
+    }
 }
 

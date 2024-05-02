@@ -27,6 +27,12 @@ Route::middleware(['throttle:5,1'])->group( function(){
     });
 });
 
+Route::middleware(['throttle:60,1'])->group(function(){
+    Route::middleware('auth:sanctum')->group(function(){
+        Route::post('/createfilm', 'App\Http\Controllers\FilmController@create');
+    });
+});
+
 Route::get('/films', 'App\Http\Controllers\FilmController@index');
 
 

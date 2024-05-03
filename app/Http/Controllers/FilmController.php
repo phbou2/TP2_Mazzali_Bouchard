@@ -24,18 +24,18 @@ class FilmController extends Controller
     public function create($request)
     {
         try{
-            if ($this->$filmRepository->checkIfAdmin())
+            if (!$this->$filmRepository->checkIfAdmin())
             {
-                if ($this->$filmRepository->validateData())
-                {
-                    $this->$filmRepository->create($request->all());
-                    return response()->json(['message' => 'Film created successfully'], CREATED);
-                }else {
-                    return response()->json(['error' => 'Invalid data'], INVALID_DATA);
-                }
-            }else {
                 return response()->json(['error' => 'Only admins can create films'], FORBIDDEN);
             }
+            if (!$this->$filmRepository->validateData())
+            {
+                return response()->json(['error' => 'Invalid data'], INVALID_DATA);
+            }
+
+            $this->$filmRepository->create($request->all());
+            return response()->json(['message' => 'Film created successfully'], CREATED);
+        
         }catch (\Exception $e)
         {
             return response()->json(['error' => 'Failed to create film: ' . $e->getMessage()], SERVER_ERROR);
@@ -45,28 +45,48 @@ class FilmController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            if ($this->$filmRepository->checkIfAdmin())
-            {
-                if ($this->$filmRepository->validateData())
-                {
-                    $film = $this->filmRepository->getById($id);
-                    if (!$film) {
-                        return response()->json(['error' => 'Film not found'], NOT_FOUND);
-                    }
-
-                    $this->filmRepository->update($id, $request->all());
-
-                    return response()->json(['message' => 'Film updated successfully'], OK);
-                    
-                }else {
-                    return response()->json(['error' => 'Invalid data'], INVALID_DATA);
-                }
-            }else {
+            if (!$this->$filmRepository->checkIfAdmin()){
                 return response()->json(['error' => 'Only admins can create films'], FORBIDDEN);
             }
+
+            if (!$this->$filmRepository->validateData()){
+                return response()->json(['error' => 'Invalid data'], INVALID_DATA);
+            }
+
+            $film = $this->filmRepository->getById($id);
+
+            if (!$film) {
+                return response()->json(['error' => 'Film not found'], NOT_FOUND);
+            }
+
+            $this->filmRepository->update($id, $request->all());
+
+            return response()->json(['message' => 'Film updated successfully'], OK);
+ 
         }catch (\Exception $e)
         {
-            return response()->json(['error' => 'Failed to create film: ' . $e->getMessage()], SERVER_ERROR);
+            return response()->json(['error' => 'Failed to update film: ' . $e->getMessage()], SERVER_ERROR);
+        }
+    }
+
+    public function delete(Request $request, $id)
+    {
+        try {
+            if (!$this->filmRepository->checkIfAdmin()) {
+                return response()->json(['error' => 'Only admins can delete films'], FORBIDDEN);
+            }
+    
+            $film = $this->filmRepository->getById($id);
+            if (!$film) {
+                return response()->json(['error' => 'Film not found'], NOT_FOUND);
+            }
+    
+            $this->filmRepository->delete($id);
+    
+            return response()->json(['message' => 'Film deleted successfully'], OK);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete film: ' . $e->getMessage()], SERVER_ERROR);
         }
     }
 }

@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 //Routes du TP2 ici : 
 Route::middleware(['throttle:5,1'])->group( function(){
@@ -31,10 +28,10 @@ Route::middleware(['throttle:60,1'])->group(function(){
     Route::middleware('auth:sanctum')->group(function(){
         Route::post('/createfilm', 'App\Http\Controllers\FilmController@create');
         Route::post('/updatefilm/{id}', 'App\Http\Controllers\FilmController@update');
+        Route::post('/deletefilm/{id}', 'App\Http\Controllers\FilmController@delete');
     });
 });
 
-Route::get('/films', 'App\Http\Controllers\FilmController@index');
 
 
 

@@ -4,6 +4,7 @@ namespace App\Repository\Eloquent;
 
 use App\Repository\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 define('ADMIN', 2);
 
@@ -41,7 +42,20 @@ class BaseRepository implements RepositoryInterface
 
     public function update($id, $values): ?Model
     {
-        $this->model->where('id', $id)->update($values);
+        try {
+            return $this->model->where('id', $id)->update($values);
+        } catch (ModelNotFoundException $exception) {
+            return null;
+        }
+    }
+
+    public function delete($id): ?Model
+    {
+        try {
+            return $this->model->destroy($id);
+        } catch (ModelNotFoundException $exception) {
+            return null;
+        }
     }
 
     public function checkIfAdmin($request)

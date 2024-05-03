@@ -32,7 +32,16 @@ class BaseRepository implements RepositoryInterface
     */
     public function getById($id): ?Model
     {
-        return $this->model->find($id);
+        try {
+            return $this->model->findOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return null;
+        }
+    }
+
+    public function update($id, $values): ?Model
+    {
+        $this->model->where('id', $id)->update($values);
     }
 
     public function checkIfAdmin($request)

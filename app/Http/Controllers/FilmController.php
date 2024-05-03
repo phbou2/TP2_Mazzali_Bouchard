@@ -40,6 +40,34 @@ class FilmController extends Controller
         {
             return response()->json(['error' => 'Failed to create film: ' . $e->getMessage()], SERVER_ERROR);
         }
+
+    }
+    public function update(Request $request, $id)
+    {
+        try{
+            if ($this->$filmRepository->checkIfAdmin())
+            {
+                if ($this->$filmRepository->validateData())
+                {
+                    $film = $this->filmRepository->getById($id);
+                    if (!$film) {
+                        return response()->json(['error' => 'Film not found'], NOT_FOUND);
+                    }
+
+                    $this->filmRepository->update($id, $request->all());
+
+                    return response()->json(['message' => 'Film updated successfully'], OK);
+                    
+                }else {
+                    return response()->json(['error' => 'Invalid data'], INVALID_DATA);
+                }
+            }else {
+                return response()->json(['error' => 'Only admins can create films'], FORBIDDEN);
+            }
+        }catch (\Exception $e)
+        {
+            return response()->json(['error' => 'Failed to create film: ' . $e->getMessage()], SERVER_ERROR);
+        }
     }
 }
 

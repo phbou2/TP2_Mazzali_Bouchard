@@ -1,5 +1,5 @@
 <?php
-/** * @OA\Info(title="TP2 API", version="0.1") */
+/** * @OA\Info(title="TP2 API, faites par Breno et Philippe", version="0.2") */ 
 
 namespace App\Http\Controllers;
 

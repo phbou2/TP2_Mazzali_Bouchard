@@ -22,7 +22,43 @@ class CriticController extends Controller
     {
         $this->criticRepository = $criticRepository;
     }
-    
+ /**
+ * @OA\Post(
+ *    path="/critics",
+ *    tags={"Critics"},
+ *    summary="Create a critic",
+ *    description="Create a critic",
+ *    @OA\RequestBody(
+ *        required=true,
+ *        @OA\JsonContent(
+ *            required={"film_id", "note", "comment"},
+ *            @OA\Property(property="film_id", type="integer", format="int64", example="1"),
+ *            @OA\Property(property="note", type="integer", format="int64", example="5"),
+ *            @OA\Property(property="comment", type="string", format="string", example="Super film"),
+ *        ),
+ *    ),
+ *    @OA\Response(
+ *        response=201,
+ *        description="Created",
+ *        @OA\JsonContent(
+ *            @OA\Property(property="id", type="integer", format="int64", example="1"),
+ *            @OA\Property(property="film_id", type="integer", format="int64", example="1"),
+ *            @OA\Property(property="user_id", type="integer", format="int64", example="1"),
+ *            @OA\Property(property="note", type="integer", format="int64", example="5"),
+ *            @OA\Property(property="comment", type="string", format="string", example="Super film"),
+ *        ),
+ *    ),
+ *    @OA\Response(
+ *        response=400,
+ *        description="Bad request",
+ *    ),
+ *    @OA\Response(
+ *        response=403,
+ *        description="Forbidden",
+ *    ),
+ *    security={{"bearerAuth": {}}}
+ * )
+ */
     public function store(Request $request)
     {
         try{

@@ -22,7 +22,7 @@ class CriticController extends Controller
     {
         $this->criticRepository = $criticRepository;
     }
-
+    
     public function store(Request $request)
     {
         try{

@@ -14,10 +14,18 @@ class CriticRepository extends BaseRepository implements CriticRepositoryInterfa
     *
     * @param Example $model
     */
-   public function __construct(Critic $model)
-   {
-       parent::__construct($model);
-   }
+    public function __construct(Critic $model)
+    {
+        parent::__construct($model);
+    }
+
+    public function getByFilmAndUser($filmId, $userId)
+    {
+        return Critic::where('film_id', $filmId)
+            ->where('user_id', $userId)
+            ->first();
+    }
+
 }
 
 ?>

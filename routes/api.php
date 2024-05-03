@@ -29,6 +29,7 @@ Route::middleware(['throttle:60,1'])->group(function(){
         Route::post('/createfilm', 'App\Http\Controllers\FilmController@create');
         Route::post('/updatefilm/{id}', 'App\Http\Controllers\FilmController@update');
         Route::post('/deletefilm/{id}', 'App\Http\Controllers\FilmController@delete');
+        Route::post('/critics', 'App\Http\Controllers\CriticController@store');
     });
 });
 

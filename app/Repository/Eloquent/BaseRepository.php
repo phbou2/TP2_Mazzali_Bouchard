@@ -4,7 +4,6 @@ namespace App\Repository\Eloquent;
 
 use App\Repository\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 define('ADMIN', 2);
 
@@ -17,45 +16,24 @@ class BaseRepository implements RepositoryInterface
         $this->model = $model;
     }
 
-    /**
-    * @param array $attributes
-    *
-    * @return Model
-    */
     public function create(array $attributes): Model
     {
         return $this->model->create($attributes);
     }
  
-    /**
-    * @param $id
-    * @return Model
-    */
     public function getById($id): ?Model
     {
-        try {
-            return $this->model->findOrFail($id);
-        } catch (ModelNotFoundException $exception) {
-            return null;
-        }
+        return $this->model->find($id);
     }
 
-    public function update($id, $values): ?Model
+    public function update($id, $values): bool
     {
-        try {
-            return $this->model->where('id', $id)->update($values);
-        } catch (ModelNotFoundException $exception) {
-            return null;
-        }
+        return $this->model->where('id', $id)->update($values);
     }
 
-    public function delete($id): ?Model
+    public function delete($id): bool
     {
-        try {
-            return $this->model->destroy($id);
-        } catch (ModelNotFoundException $exception) {
-            return null;
-        }
+        return $this->model->destroy($id) > 0;
     }
 
     public function checkIfAdmin($request)
@@ -63,9 +41,10 @@ class BaseRepository implements RepositoryInterface
         if ($request->user() && $request->user()->role_id == ADMIN)
         {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 }
+
 ?>

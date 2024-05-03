@@ -31,7 +31,7 @@ Route::middleware(['throttle:60,1'])->group(function(){
         Route::delete('/deletefilm/{id}', 'App\Http\Controllers\FilmController@delete');
         Route::post('/critics', 'App\Http\Controllers\CriticController@store');
         Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
-        Route::patch('/users/{id}', 'App\Http\Controllers\UserController@updatePassword');
+        Route::patch('/users/{id}/update', 'App\Http\Controllers\UserController@updatePassword');
     });
 });
 

@@ -6,9 +6,17 @@ use Auth;
 use Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Repository\AuthRepositoryInterface;
 
 class AuthController extends Controller
 {
+    private AuthRepositoryInterface $authRepository;
+
+    public function __construct(AuthRepositoryInterface $authRepository)
+    {
+        $this->authRepository = $authRepository;
+    }
+
 /**
 * @OA\Post(
 *   path="/api/signin",
@@ -61,13 +69,13 @@ class AuthController extends Controller
                 'login' => $request['login'],
                 'password' => $request['password'],
             ];
-    
-            if (Auth::attempt($credentials)) {
-                $token = Auth::user()->createToken('tokenName');
-    
-                return response()->json(['token' => $token->plainTextToken], OK);
+            
+            $token = $this->authRepository->login($credentials);
+
+            if (!$token){
+                return response()->json(['error' => 'Invalid password or username'], INVALID_DATA);
             }else {
-                return response()->json(['error' => 'invalid password'], INVALID_DATA);
+                return response()->json(['token' => $token->plainTextToken], OK);
             }
         }catch (\Exception $e){
             return response()->json(['error' => 'Failed to login user: ' . $e->getMessage()], SERVER_ERROR);
@@ -138,14 +146,7 @@ class AuthController extends Controller
                 return response()->json(['error' => $validator->errors()->first()], INVALID_DATA);
             }
             
-            $newUser = new User();
-            $newUser->login = $user['login'];
-            $newUser->password = bcrypt($user['password']);
-            $newUser->email = $user['email'];
-            $newUser->last_name = $user['last_name'];
-            $newUser->first_name = $user['first_name'];
-            $newUser->role_id = $user['role_id'];
-            $newUser->save();
+            $this->authRepository->createUser($user);
 
             return response()->json(['message' => 'User registered succesfully'], CREATED);
             
@@ -173,7 +174,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete();
+            $this->authRepository->deleteUserToken($request);
             return response()->json(['message' => 'User logged out successfully'], NO_CONTENT);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to logout user: ' . $e->getMessage()], SERVER_ERROR);

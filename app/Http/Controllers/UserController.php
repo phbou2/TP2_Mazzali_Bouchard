@@ -46,4 +46,42 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to show user: ' . $e->getMessage()], SERVER_ERROR);
         }
     }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required|integer',
+                'password' => 'required|string|min:8',
+                'new_password' => 'required|string|min:8',
+                'confirm_password' => 'required|string|min:8|same:new_password',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], INVALID_DATA);
+            }
+
+            $user = $this->userRepository->getById($request->user_id);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], NOT_FOUND);
+            }
+
+            if ($request->user()->id !== $user->id) {
+                return response()->json(['error' => 'You can only update your own password'], FORBIDDEN);
+            }
+
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json(['error' => 'Incorrect current password'], UNAUTHORIZED);
+            }
+
+            $user->password = bcrypt($request->password);
+
+            $this->userRepository->update($request->user()->id, $user);
+
+            return response()->json(['message' => 'Password updated successfully'], OK);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update password: ' . $e->getMessage()], SERVER_ERROR);
+        }
+    }
 }

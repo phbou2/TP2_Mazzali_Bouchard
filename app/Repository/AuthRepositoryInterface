@@ -6,6 +6,8 @@ namespace App\Repository;
 interface AuthRepositoryInterface
 {
     public function login($credentials);
+    public function createUser($user);
+    public function deleteUserToken($user);
 }
 
 ?>
